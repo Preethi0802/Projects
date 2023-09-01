@@ -1,0 +1,132 @@
+import pyttsx3
+import datetime
+import speech_recognition as sr
+import wikipedia
+import webbrowser
+import os
+import smtplib as s
+import random
+
+engine=pyttsx3.init('sapi5') #sapi5 is related to speech api from windows
+voices=engine.getProperty('voices')
+
+engine.setProperty('voice',voices[0].id)
+
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
+ 
+def wishme():
+    hour = int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12 :
+        speak("Good Morning!")
+
+    elif hour>=12 and hour<16:
+        speak("Good afternoon!")
+
+    else:
+        speak("Good evening!")
+    
+    speak("Im your AI assistant!,may i know your name Please?")
+
+def takeCommand():
+
+    r=sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening....")
+        r.pause_threshold = 0.4
+        r.energy_threshold = 700
+        r.non_speaking_duration = 0.3
+        audio=r.listen(source)
+    '''
+    while 1:
+        print("Recognising...")
+        query=r.recognize_google(audio,language='en-in')
+        if query!=None:
+            break
+        else:
+            print("say that again , please") 
+
+
+    print(f"User said : {query}\n")
+    return query   
+
+    '''
+    try:
+        print("Recognising...")
+        query=r.recognize_google(audio,language='en-in')
+        print(f"User said : {query}\n")
+        return query   
+
+    except Exception as e:
+        print("say that again , please")
+        return "None"
+        
+    
+ 
+def sendEmail(to, content):
+    server = s.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login('preethis080202.com', 'Qwert_mn')
+    server.sendmail(preethis080202@gmail.com.com', to, content)
+    server.close()
+
+
+
+if __name__ == "__main__":
+    wishme()
+    name=takeCommand()
+    speak(f"hello {name}, how can i help you ")
+    diction={"kaushik":"koushikkavshy@gmail.com","surya":"suryaprakash0831@gmail.com","anjali":"anjalikol251@gmail.com"}
+    if True:
+         query=takeCommand().lower()
+
+         if 'wikipedia' in query:
+             speak("searching wikipedia")
+             query=query.replace("wikipedia","")
+             results=wikipedia.summary(query,sentences=2)
+             speak("according to wikepedia")
+             print(results)
+             speak(results) 
+         elif "open youtube" in query:
+            webbrowser.open("youtube.com")
+
+         elif "open google" in query:
+            webbrowser.open("google.com ")
+        
+         elif "open gmail" in query:
+            webbrowser.open("gmail.com")
+
+         elif 'the time' in query:
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
+            speak(f"Sir, the time is {strTime}")
+         elif 'play music' in query:
+            music_dir = 'C:\\Users\\HP\\Music\\songs'
+            songs = os.listdir(music_dir)
+            ra=random.randint(0,50)
+            os.startfile(os.path.join(music_dir, songs[ra]))
+         elif 'open gallery' in query:
+             gallery_dir = 'G:\\pree pics\\100CANON'
+             pics = 'G:\pree pics'
+             os.startfile(pics)
+         elif 'open code' in query:
+            codePath = "C:\\Users\\Haris\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            os.startfile(codePath)
+         elif 'send mail' in query:
+            try:
+                speak("to whom should I send?")
+                to =takeCommand().lower()
+
+                speak("What should I say?")
+                content = takeCommand()
+                
+                if to in diction :
+                    sendEmail(diction[to], content)
+                    speak("Email has been sent!")
+                else:
+                    print("sorry")
+                    
+            except Exception as e:
+                print(e)
+                speak("Sorry my friend. I am not able to send this email")   
