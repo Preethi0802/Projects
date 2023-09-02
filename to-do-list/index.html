@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="stylee.css">
+  <title>To-Do App</title>
+</head>
+<body>
+  <div class="container">
+    <h1>To-Do List</h1>
+    <form id="new-task-form">
+      <input type="hidden" id="task-index">
+      <input type="text" id="task-input" placeholder="Enter a task...">
+      <select id="priority-select">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button type="submit">Add</button>
+    </form>
+    <ul id="task-list">
+      <li class="task-item">
+    <input type="checkbox" class="mark-done">
+    <span>Task content here</span>
+    <span class="priority">Priority here</span>
+    <button class="edit-btn" data-index="0">Edit</button>
+    <button class="delete-btn" data-index="0">Delete</button>
+  </li> 
+    </ul>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
