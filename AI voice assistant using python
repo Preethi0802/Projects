@@ -6,12 +6,36 @@ import webbrowser
 import os
 import smtplib as s
 import random
+import requests
+import sys
+import openai
 
-engine=pyttsx3.init('sapi5') #sapi5 is related to speech api from windows
+from config import API_KEY
+openai.key=API_KEY
+
+
+engine=pyttsx3.init('sapi5') #sapi5 is related to speech api from windowsav
 voices=engine.getProperty('voices')
-
+#print(voices[1].id)
 engine.setProperty('voice',voices[0].id)
 
+'''
+def ai(prompt):
+    openai.api_key =API_KEY
+
+    response = openai.Completion.create(
+    model="text-davinci-003",
+    prompt= prompt,
+    temperature=0.7,
+    max_tolens=256,
+    top_p=1,
+    fequency_penalty=0,
+    presence_penalty=0
+    )
+    print(response["choices"][0]["text"])
+    if not os.path.exists(Openai):
+        os.mkdir("Openai")
+    '''
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
@@ -27,7 +51,7 @@ def wishme():
     else:
         speak("Good evening!")
     
-    speak("Im your AI assistant!,may i know your name Please?")
+    speak("Im Ken!,may i know your name Please?")
 
 def takeCommand():
 
@@ -61,6 +85,7 @@ def takeCommand():
     except Exception as e:
         print("say that again , please")
         return "None"
+    return query
         
     
  
@@ -68,8 +93,8 @@ def sendEmail(to, content):
     server = s.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
-    server.login('preethis080202.com', 'Qwert_mn')
-    server.sendmail(preethis080202@gmail.com.com', to, content)
+    server.login('priyanka080202@gmail.com', 'priya!Mail99')
+    server.sendmail('priyanka080202@gmail.com', to, content)
     server.close()
 
 
@@ -78,8 +103,8 @@ if __name__ == "__main__":
     wishme()
     name=takeCommand()
     speak(f"hello {name}, how can i help you ")
-    diction={"kaushik":"koushikkavshy@gmail.com","surya":"suryaprakash0831@gmail.com","anjali":"anjalikol251@gmail.com"}
-    if True:
+    diction={"kaushik":"koushikkavshy@gmail.com","surya":"suryaprakash0831@gmail.com","anjali":"anjalikol251@gmail.com","Priyanka":"priyanka080202@gmail.com"}
+    while True:
          query=takeCommand().lower()
 
          if 'wikipedia' in query:
@@ -98,28 +123,34 @@ if __name__ == "__main__":
          elif "open gmail" in query:
             webbrowser.open("gmail.com")
 
+         elif "open wikipedia" in query:
+            webbrowser.open("wikipedia.com")
+
          elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
             speak(f"Sir, the time is {strTime}")
          elif 'play music' in query:
-            music_dir = 'C:\\Users\\HP\\Music\\songs'
+            music_dir = 'C:\\Users\\Music\\songs'
             songs = os.listdir(music_dir)
             ra=random.randint(0,50)
             os.startfile(os.path.join(music_dir, songs[ra]))
+
          elif 'open gallery' in query:
-             gallery_dir = 'G:\\pree pics\\100CANON'
-             pics = 'G:\pree pics'
-             os.startfile(pics)
+            gallery_dir = 'G:\\kavshy photos\\100CANON'
+            pics = 'G:\kavshy photos'
+            os.startfile(pics)
+
          elif 'open code' in query:
-            codePath = "C:\\Users\\Haris\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            codePath = "C:\\Users\\Preethi Priya\\Desktop\\Jarvis"
             os.startfile(codePath)
+            
          elif 'send mail' in query:
             try:
                 speak("to whom should I send?")
                 to =takeCommand().lower()
 
                 speak("What should I say?")
-                content = takeCommand()
+                content = takeCommand().lower()
                 
                 if to in diction :
                     sendEmail(diction[to], content)
@@ -129,4 +160,43 @@ if __name__ == "__main__":
                     
             except Exception as e:
                 print(e)
-                speak("Sorry my friend. I am not able to send this email")   
+                speak("Sorry my friend harry bhai. I am not able to send this email") 
+
+         elif 'weather' in query:
+             user_api = os.environ['Current_weather_api']
+             speak("Tell me the city:")
+             location = takeCommand().lower()
+             print(location)
+
+
+             complete_api_link = "https://api.openweathermap.org/data/2.5/weather?q="+location+"&appid="+user_api
+             api_link = requests.get(complete_api_link)
+             api_data = api_link.json()
+
+            #create variables to store and display data
+             temp_city = ((api_data['main']['temp']) - 273.15)
+             weather_desc = api_data['weather'][0]['description']
+             hmdt = api_data['main']['humidity']
+             wind_spd = api_data['wind']['speed']
+             date_time = datetime.datetime.now().strftime("%d %b %Y | %I:%M:%S %p")
+
+             print ("-------------------------------------------------------------")
+             print ("Weather Stats for - {}  || {}".format(location.upper(), date_time))
+             print ("-------------------------------------------------------------")
+             
+             print ("Current temperature is: {:.2f} deg C".format(temp_city))
+             res="Current temperature is: {:.2f} deg C".format(temp_city)
+             # print(res)
+             speak(res)
+             print ("Current weather description  :",weather_desc)
+             res="Current weather description  :",weather_desc
+             speak(res)
+             print ("Current Humidity      :",hmdt, '%')
+             res="Current Humidity      :",hmdt, '%'
+             speak(res)
+             print ("Current wind speed    :",wind_spd ,'kmph')
+             res="Current wind speed    :",wind_spd ,'kmph'
+             speak(res)
+             '''
+         elif "open chatgpt".lower() in query.lower():
+             ai(prompt=query)'''
